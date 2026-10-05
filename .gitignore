@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+
+# JavaScript
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+
+# Logs and generated files
+*.log
+output/
+
