@@ -28,6 +28,7 @@ class TriggerAccepted(BaseModel):
 
     status: Literal["accepted"] = "accepted"
     event_id: UUID
+    delivery: Literal["sent", "host_offline", "unmapped", "send_failed"]
 
 
 class HealthResponse(BaseModel):
