@@ -1,0 +1,59 @@
+menu "Netserver configuration"
+
+    config NETSERVER_WIFI_SSID
+        string "Access point Wi-Fi name"
+        default "ProductivityWire"
+        help
+            Name of the Wi-Fi network hosted by the ESP32 (1 to 32 bytes).
+
+    config NETSERVER_WIFI_PASSWORD
+        string "Access point Wi-Fi password"
+        default "HelloWorld123"
+        help
+            Use 8 to 63 bytes for WPA2, or leave empty for an open network.
+
+    config NETSERVER_WIFI_CHANNEL
+        int "Access point Wi-Fi channel"
+        range 1 11
+        default 1
+
+    config NETSERVER_SERVER_PORT
+        int "Client machine's server port"
+        range 1 65535
+        default 3000
+        help
+            The first client to join the access point is selected as the server.
+            Its DHCP address is used as http://<client IP>:<port>.
+            This port must expose /health and /api/triggers, either directly from
+            FastAPI or through a proxy. Bind the server to 0.0.0.0, not localhost.
+            No web server or control page is hosted on the ESP32.
+            When the selected client disconnects, reporting stops and the next
+            new connection can become the server. Other clients already connected
+            must reconnect to become the selected server.
+
+    config NETSERVER_SERVER_RETRY_MS
+        int "Server readiness retry interval (milliseconds)"
+        range 1000 60000
+        default 5000
+        help
+            Retry /health until the selected client's API responds. A valid HTTP
+            Date header synchronizes the clock; Uvicorn sends this by default.
+            Reporting arms automatically once the server and clock are ready.
+
+    config NETSERVER_DEVICE_ID
+        string "Sensor device ID"
+        default "tripwire-01"
+        help
+            Must match a key in the server's DEVICE_HOSTS mapping.
+            Use 1 to 100 ASCII letters, digits, '.', '_' or '-'.
+
+    config NETSERVER_REQUEST_TIMEOUT_MS
+        int "Server request timeout (milliseconds)"
+        range 500 10000
+        default 3000
+        help
+            Triggers are queued and sent by a background task while armed.
+            Requests are not automatically retried, because the server does not
+            deduplicate events and retries could switch the workspace twice.
+
+endmenu
